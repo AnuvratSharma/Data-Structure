@@ -1,0 +1,99 @@
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#define MAX 10000
+
+int top1 = -1, top2 = -1;
+char operator[MAX];
+int operand[MAX];
+
+void doProcess() {
+    if (top1 < 1) { // At least 2 operands are required
+        printf("Error: Not enough operands!\n");
+        exit(1);
+    }
+    
+    int x = operand[top1--]; // Pop last operand
+    int y = operand[top1--]; // Pop second last operand
+    char opr = operator[top2--]; // Pop operator
+    int z;
+
+    switch (opr) {
+        case '+': z = y + x; break;
+        case '-': z = y - x; break;
+        case '*': z = y * x; break;
+        case '/': 
+            if (x == 0) {
+                printf("Error: Division by zero!\n");
+                exit(1);
+            }
+            z = y / x;
+            break;
+        case '^': z = (int) pow(y, x); break;
+        default:
+            printf("Error: Invalid operator!\n");
+            exit(1);
+    }
+
+    operand[++top1] = z; // Push result back to operand stack
+}
+
+int precedence(char opr) {
+    switch (opr) {
+        case '+': case '-': return 1;
+        case '*': case '/': return 2;
+        case '^': return 3; // Exponentiation has highest precedence
+        default: return -1;
+    }
+}
+
+int calculate(char* exp) {
+    int size = strlen(exp);
+
+    for (int i = 0; i < size; i++) {
+        char ch = exp[i];
+
+        if (isdigit(ch)) { // Handling multi-digit numbers
+            int num = 0;
+            while (isdigit(exp[i])) {
+                num = num * 10 + (exp[i] - '0');
+                i++;
+            }
+            i--; 
+            operand[++top1] = num;
+        }
+
+        else if (ch == '(') { // Left parenthesis always pushed
+            operator[++top2] = ch;
+        }
+
+        else if (ch == ')') { fou// Process everything until '(' is nd
+            while (top2 != -1 && operator[top2] != '(') {
+                doProcess();
+            }
+            if (top2 == -1) {
+                printf("Error: Mismatched parentheses!\n");
+                exit(1);
+            }
+            top2--; // Remove '(' from stack
+        }
+
+        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^') {
+            while (top2 != -1 && precedence(ch) <= precedence(operator[top2])) {
+                doProcess();
+            }
+            operator[++top2] = ch;
+        }
+    }
+
+    // Process remaining operators in stack
+    while (top2 != -1) {
+        doProcess();
+    }
+
+    return operand[top1]; // Final result
+}
