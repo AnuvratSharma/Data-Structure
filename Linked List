@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include<stdlib.h>
+struct node{
+    int data;
+    struct node *next;
+};
+int pos,i=1;
+struct node *head= NULL,*newnode,*temp;
+
+
+struct node * createnode(int ele){
+    struct node*newnode=(struct node*)malloc(sizeof(struct node));
+        newnode->data=ele;
+        newnode->next=NULL;
+        return newnode;
+    }
+    
+void insertatbeg(int ele){
+  newnode=createnode( ele);
+  newnode->next=head;
+  head=newnode;
+}    
+    void insertend( int ele){
+        newnode=createnode( ele);
+        temp=head;
+        while(temp->next!=NULL){
+            temp=temp->next;
+        }
+        temp->next=newnode;
+    }
+  void insertatpos(int ele){
+    newnode=createnode(ele);
+     temp=head;
+    printf("Enter pos:");
+    scanf("%d",&pos);
+    if(pos<1|| head ==NULL){
+        printf("Invalid Position");
+        
+    } 
+        while(i<pos && temp->next !=NULL){
+        temp=temp->next;
+        i++;
+
+        }
+        newnode->next=temp->next;
+        temp->next=newnode;
+    
+  } 
+  void deletefrombeg(){
+      temp=head;
+      head = head->next;
+      free(temp);
+  }
+  void deletefromend(){
+      temp=head;
+      struct node*prev;
+      while(temp->next!=NULL){
+          prev=temp;
+          temp=temp->next;
+      }
+      prev->next=NULL;
+      free(temp);
+  }
+  void delfrompos(){
+      int pos,i=1;
+      temp=head;
+      printf("Enter Position:");
+      scanf("%d",&pos);
+      struct node*nextnode;
+      while(i<pos-1){
+          temp=temp->next;
+          i++;
+      }
+      nextnode=temp->next;
+      temp->next=nextnode->next;
+      free(nextnode);
+      
+  }
+  
+  
+  void display(){
+      temp=head;
+      while(temp!=NULL){
+          printf("%d->",temp->data);
+          temp=temp->next;
+      }
+      printf("NULL\n");
+  }
+  
+    
+
+int main()
+{
+int n,ele;
+scanf("%d",&n);
+for(int i=0;i<n;i++){
+    scanf("%d",&ele);
+    insertatbeg(ele);
+}
+display();
+//insertatpos(5);
+//deletefrombeg();
+//deletefromend();
+delfrompos();
+display();
+    return 0;
+}
