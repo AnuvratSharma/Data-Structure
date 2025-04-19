@@ -1,0 +1,18 @@
+struct ListNode* oddEvenList(struct ListNode* head) {
+    if(head== NULL || head->next == NULL){
+        return head;
+    }
+    struct ListNode* odd=head;
+    struct ListNode* even=head->next;
+    struct ListNode* evenhead=even;
+    while(even!=NULL && even->next!=NULL){
+        odd->next=even->next;
+        odd=odd->next;// connect odd with odd
+        even->next=odd->next;
+        even=even->next;//connect even with even
+        
+        
+    }
+    odd->next=evenhead;//odd list ko even se connect karne ke liye
+    return head;
+}
