@@ -1,32 +1,34 @@
-int countNodes(struct ListNode*head){
-if(head == NULL)
-    return 0;
-else{
-    struct ListNode*temp = head;
-    int i=0;
-while(temp!=NULL){
-    i++;
-    temp = temp->next;
-}
-return i;
-}
+int countnodes(struct ListNode* head){
+    struct ListNode *temp=head;
+    int count =0;
+    while(temp!=NULL){
+        count++;
+temp=temp->next;
 
-}
-struct ListNode* deleteMiddle(struct ListNode* head){
-    int size =countNodes(head);
-    int mid =size/2;
-if(mid == 0)
-return NULL;
-else{
-    struct ListNode*temp= head;
-    int i =1;
-    while(i<mid && temp-> next != NULL){
-        i++;
-         temp = temp ->next;
     }
-    if(temp-> next !=NULL)
-    temp -> next = temp -> next -> next;
-    return head;
-}
+    return count;
 }
 
+
+
+
+struct ListNode* deleteMiddle(struct ListNode* head) {
+    if(head== NULL || head->next==NULL){
+        free(head);
+        return NULL;
+    }
+    struct ListNode*temp=head,*nextnode;
+    
+    int size=countnodes(head);
+    int mid=size/2;
+     int i=1;
+    while(i<mid && temp->next!=NULL){
+        i++;
+temp=temp->next;
+ }
+    nextnode=temp->next;
+    temp->next=nextnode->next;
+    free(nextnode);
+    return head;
+    
+}
